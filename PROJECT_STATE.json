@@ -1,0 +1,30 @@
+{
+  "updatedAt": "2026-06-24T07:00:20.256Z",
+  "framework": "Next.js",
+  "dbModels": [],
+  "apiRoutes": [
+    "app/api/briefing/route.ts"
+  ],
+  "pages": [
+    "app/page.tsx"
+  ],
+  "components": [
+    "app/layout.tsx",
+    "components/BriefingCard.tsx"
+  ],
+  "dependencies": [
+    "@types/node",
+    "@types/react",
+    "@types/react-dom",
+    "autoprefixer",
+    "eslint",
+    "eslint-config-next",
+    "next",
+    "postcss",
+    "react",
+    "react-dom",
+    "tailwindcss",
+    "typescript"
+  ],
+  "fileCount": 14
+}
