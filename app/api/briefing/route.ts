@@ -1,132 +1,55 @@
 import { NextResponse } from "next/server";
 
-interface BriefingItem {
-  label: string;
-  value: string;
-  icon?: string;
-}
-
-interface BriefingSection {
-  title: string;
-  status: "success" | "warning" | "error" | "info";
-  items: BriefingItem[];
-}
-
 export async function GET() {
-  const today = new Date().toLocaleDateString("en-US", {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
+  const briefing = {
+    date: new Date().toISOString(),
+    gmail: {
+      status: "error" as const,
+      message:
+        "Gmail is disconnected. Re-authorize in Settings → Integrations.",
+    },
+    slack: {
+      status: "ok" as const,
+      recentAlerts: 12,
+      message:
+        "Platform watchdog active. Gemini and Fly worker had outages in the last 24h — currently recovered.",
+    },
+    github: {
+      status: "warning" as const,
+      repos: 19,
+      openIssues: 1,
+      message:
+        "BOOM-ROOM-TRADERSS has an open issue (#20). Morning-briefing app is built but not deployed.",
+    },
+    integrations: [
+      { name: "Gmail", status: "error" as const },
+      { name: "Slack", status: "ok" as const },
+      { name: "GitHub", status: "ok" as const },
+      { name: "Facebook", status: "ok" as const },
+      { name: "Instagram", status: "ok" as const },
+      { name: "Discord", status: "ok" as const },
+      { name: "Stripe", status: "warning" as const },
+      { name: "Google Ads", status: "warning" as const },
+    ],
+    actions: [
+      {
+        priority: "high" as const,
+        text: "Reconnect Gmail — go to Settings → Integrations and re-authorize mackquisition@gmail.com.",
+      },
+      {
+        priority: "medium" as const,
+        text: "BOOM-ROOM-TRADERSS Issue #20 — verification fix needs review. Check and merge if ready.",
+      },
+      {
+        priority: "medium" as const,
+        text: "Deploy the morning-briefing app to Vercel so you can visit this dashboard daily.",
+      },
+      {
+        priority: "low" as const,
+        text: "Connect Stripe + Google Ads to include revenue and campaign data in future briefings.",
+      },
+    ],
+  };
 
-  // In a real deployment, this route would call Gmail/Calendar/Slack APIs.
-  // For now, it returns the briefing data that was compiled from the agent run.
-  const sections: BriefingSection[] = [
-    {
-      title: "📨 Email",
-      status: "error",
-      items: [
-        {
-          label: "Gmail",
-          value: "Disconnected — reauthorize in Integrations",
-          icon: "🔴",
-        },
-        {
-          label: "Unread",
-          value: "Unavailable (Gmail OAuth expired)",
-          icon: "—",
-        },
-      ],
-    },
-    {
-      title: "💬 Slack",
-      status: "warning",
-      items: [
-        {
-          label: "Platform",
-          value: "Fly worker had 2 outages overnight (recovered)",
-          icon: "🟡",
-        },
-        {
-          label: "Gemini",
-          value: "Brief outage alongside Fly worker (recovered)",
-          icon: "🟢",
-        },
-        {
-          label: "Build",
-          value: "BOOM-ROOM-TRADERSS blocked — npm dep resolution bug",
-          icon: "🔴",
-        },
-      ],
-    },
-    {
-      title: "🐙 GitHub",
-      status: "success",
-      items: [
-        { label: "Active Repos", value: "10 repos (Next.js 14 stack)", icon: "📦" },
-        { label: "Latest", value: "home-control-app, booking-app, ai-chatbot-app", icon: "🆕" },
-        { label: "Blocked", value: "BOOM-ROOM-TRADERSS (npm build stuck round 80/80)", icon: "⚠️" },
-      ],
-    },
-    {
-      title: "📊 Google Ads",
-      status: "warning",
-      items: [
-        {
-          label: "Status",
-          value: "Connected — needs customer ID for data",
-          icon: "🟡",
-        },
-      ],
-    },
-    {
-      title: "💳 Stripe",
-      status: "error",
-      items: [
-        {
-          label: "Status",
-          value: "Not connected — add secret key in Integrations",
-          icon: "🔴",
-        },
-      ],
-    },
-    {
-      title: "📱 Social",
-      status: "success",
-      items: [
-        { label: "Instagram", value: "Oriumai — connected", icon: "🟢" },
-        { label: "Facebook", value: "Kenzie Johnson · Oriumai — connected", icon: "🟢" },
-        { label: "Discord", value: "sampsonai — OAuth connected", icon: "🟡" },
-      ],
-    },
-    {
-      title: "✅ Action Items",
-      status: "error",
-      items: [
-        {
-          label: "HIGH",
-          value: "Reconnect Gmail (expired OAuth token)",
-          icon: "🔴",
-        },
-        {
-          label: "HIGH",
-          value: "Fix BOOM-ROOM-TRADERSS npm build (try pnpm or npm upgrade)",
-          icon: "🔴",
-        },
-        {
-          label: "MEDIUM",
-          value: "Configure Google Ads customer ID",
-          icon: "🟡",
-        },
-        {
-          label: "MEDIUM",
-          value: "Connect Stripe secret key",
-          icon: "🟡",
-        },
-      ],
-    },
-  ];
-
-  return NextResponse.json({ date: today, sections });
+  return NextResponse.json(briefing);
 }
